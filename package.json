@@ -1,0 +1,50 @@
+{
+  "name": "@syntext/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Syntext documentation - enables AI assistants to generate valid Syntext docs",
+  "author": "Syntext <hello@syntext.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syntext-dev/syntext-mcp.git"
+  },
+  "keywords": [
+    "syntext",
+    "mcp",
+    "model-context-protocol",
+    "documentation",
+    "ai",
+    "cursor",
+    "copilot"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "syntext-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target node --format esm && echo '#!/usr/bin/env node' | cat - dist/index.js > dist/index.tmp && mv dist/index.tmp dist/index.js && chmod +x dist/index.js",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "bun-types": "latest",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
