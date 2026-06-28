@@ -59,6 +59,68 @@ Add to your Cursor MCP config:
 }
 ```
 
+### Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "syntext": {
+      "command": "npx",
+      "args": ["@syntext/mcp"]
+    }
+  }
+}
+```
+
+## Usage Example
+
+Once configured, your AI assistant can generate valid Syntext docs:
+
+**You:** "Create a getting started guide for my API"
+
+**AI:** *(uses `get_frontmatter` to get guide schema, `get_components` to find available components)*
+
+```mdx
+---
+title: Getting Started
+description: Get up and running with our API in 5 minutes
+icon: rocket
+---
+
+# Getting Started
+
+<Note>
+You'll need an API key to follow along. [Get one here](/dashboard).
+</Note>
+
+<Steps>
+  <Step title="Install the SDK">
+    ```bash
+    npm install @acme/sdk
+    ```
+  </Step>
+  <Step title="Initialize the client">
+    ```typescript
+    import { Acme } from '@acme/sdk'
+    const client = new Acme({ apiKey: process.env.ACME_API_KEY })
+    ```
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Explore all endpoints
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/examples">
+    See working code samples
+  </Card>
+</CardGroup>
+```
+
+The AI knows the exact props, syntax, and nesting rules because it queried the MCP server.
+
 ## Tools
 
 ### `get_components`
@@ -158,10 +220,10 @@ The MCP server provides schemas for these Syntext MDX components:
 ## Development
 
 ```bash
-bun install
-bun dev        # Run in development mode
-bun test       # Run tests
-bun run build  # Build for production
+npm install
+npm run dev        # Run in development mode
+npm test           # Run tests
+npm run build      # Build for production
 ```
 
 ## Structure
@@ -175,6 +237,21 @@ src/
     ├── config.ts         # syntext.config.json schema
     └── validator.ts      # MDX validation
 ```
+
+## Troubleshooting
+
+**MCP server not connecting:**
+- Ensure `npx @syntext/mcp` runs without errors in your terminal
+- Restart your editor after updating MCP config
+- Check that Node.js 18+ is installed
+
+**AI not using Syntext components:**
+- Mention "Syntext" or "use Syntext components" in your prompt
+- The AI should automatically query `get_components` for available options
+
+**Validation errors:**
+- Use the `validate_mdx` tool to check your content before saving
+- Common issues: missing frontmatter title, unclosed components
 
 ## License
 
