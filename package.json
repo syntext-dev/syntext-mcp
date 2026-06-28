@@ -1,6 +1,6 @@
 {
   "name": "@syntext/mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP server for Syntext documentation - enables AI assistants to generate valid Syntext docs",
   "author": "Syntext <hello@syntext.dev>",
   "license": "MIT",
@@ -26,19 +26,24 @@
     "dist"
   ],
   "scripts": {
-    "dev": "bun --watch src/index.ts",
-    "build": "bun build src/index.ts --outdir dist --target node --format esm && echo '#!/usr/bin/env node' | cat - dist/index.js > dist/index.tmp && mv dist/index.tmp dist/index.js && chmod +x dist/index.js",
-    "test": "bun test",
+    "dev": "npx tsx --watch src/index.ts",
+    "build": "npx tsup src/index.ts --format esm --target node18 --outDir dist --clean && printf '%s\\n%s\\n' '#!/usr/bin/env node' \"$(cat dist/index.js)\" > dist/index.js && chmod +x dist/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "echo 'No linter configured'",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "zod": "^3.25.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.0",
     "@types/node": "^22.0.0",
-    "bun-types": "latest",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.8.0"
   },
   "engines": {

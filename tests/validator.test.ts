@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'bun:test'
+
 import { validateMdx, type ValidationResult } from '../src/schemas/validator'
 
 describe('MDX Validator', () => {
