@@ -29,14 +29,17 @@ npx @syntext/mcp
 
 ## Configuration
 
+The server runs over **stdio** and requires **no arguments, environment variables, or API keys** — it is a fully offline, project-agnostic authoring assistant. (To let an AI agent query a *deployed* doc site's content — search, pages, Q&A — use that site's remote MCP endpoint at `https://{slug}-docs.syntext.dev/_mcp` instead; that is separate from this package.)
+
 ### VS Code (Copilot/Claude)
 
-Add to your VS Code settings or `~/.vscode/settings.json`:
+Add to `.vscode/mcp.json` in your workspace (or your user-level `mcp.json`):
 
 ```json
 {
-  "mcp.servers": {
+  "servers": {
     "syntext": {
+      "type": "stdio",
       "command": "npx",
       "args": ["@syntext/mcp"]
     }
@@ -149,7 +152,7 @@ Get available MDX components with syntax, props, and examples.
 Get frontmatter schema for different page types.
 
 **Parameters:**
-- `pageType`: Type of page (guide, api-reference, changelog, landing, sdk)
+- `pageType` (optional): Type of page (guide, api-reference, changelog, landing, sdk). Omit to get all page types plus the icon list.
 
 **Example response for `api-reference`:**
 ```yaml
@@ -166,7 +169,7 @@ auth: required
 Get `syntext.config.json` schema with field descriptions.
 
 **Parameters:**
-- `includeExample` (boolean): Include example config in response
+- `example` (optional): `"full"` or `"minimal"` — return an example config instead of the schema
 
 ### `validate_mdx`
 Validate MDX content for errors and warnings.
@@ -174,24 +177,24 @@ Validate MDX content for errors and warnings.
 **Parameters:**
 - `content`: The MDX content to validate
 
-**Example response:**
-```json
-{
-  "valid": false,
-  "errors": [
-    { "line": 1, "message": "Missing required field: title" }
-  ],
-  "warnings": [
-    { "line": 8, "message": "<CardGroup> found without any <Card> children" }
-  ]
-}
+**Example response (markdown):**
+```markdown
+❌ **Invalid Syntext MDX**
+
+### Errors
+
+- Missing required frontmatter field: title (line 1)
+
+### Warnings
+
+- <CardGroup> found without any <Card> children (line 8)
 ```
 
 ### `create_page`
 Generate a page template for a specific page type.
 
 **Parameters:**
-- `pageType`: Type of page (guide, api-reference, changelog, landing, sdk)
+- `pageType`: Type of page (guide, api-reference, quickstart, landing)
 - `title`: Page title
 - `description` (optional): Page description
 
@@ -230,7 +233,8 @@ npm run build      # Build for production
 
 ```
 src/
-├── index.ts              # MCP server entry point
+├── index.ts              # stdio entry point
+├── server.ts             # MCP server factory (tools + resources)
 └── schemas/
     ├── components.ts     # Component definitions
     ├── frontmatter.ts    # Page type schemas

@@ -13,7 +13,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "lib": ["ESNext"],
-    "types": ["bun-types"],
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"]
     }
