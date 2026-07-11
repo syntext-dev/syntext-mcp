@@ -220,8 +220,8 @@ export function createServer(): McpServer {
       const result = validateMdx(content)
 
       let output = result.valid
-        ? '✅ **Valid Syntext MDX**\n\n'
-        : '❌ **Invalid Syntext MDX**\n\n'
+        ? '**Valid Syntext MDX**\n\n'
+        : '**Invalid Syntext MDX**\n\n'
 
       if (result.errors.length > 0) {
         output += '### Errors\n\n'
@@ -484,7 +484,7 @@ hideTitle: true
       output += '```mdx\n' + content + '\n```\n\n'
 
       if (!validation.valid) {
-        output += '⚠️ **Note:** Generated content has some issues. Please review.\n'
+        output += '**Note:** Generated content has some issues. Please review.\n'
       }
 
       return {
