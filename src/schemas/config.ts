@@ -35,13 +35,62 @@ export const CONFIG_SCHEMA: ConfigField[] = [
     example: '/favicon.ico',
   },
   {
+    name: 'theme',
+    type: 'string',
+    required: false,
+    description:
+      'Theme preset name. A theme is data: the preset supplies the full token set (colors, typography, fonts, radii) for both light and dark mode. Unknown names fall back to "default" with a build warning.',
+    example: 'default',
+  },
+  {
+    name: 'themeOverrides',
+    type: 'object',
+    required: false,
+    description:
+      'Per-token overrides applied on top of the preset. Change one value without restating the theme. Unknown token names are reported as build warnings and ignored.',
+    children: [
+      {
+        name: 'fonts',
+        type: 'object',
+        required: false,
+        description: 'Font family per role. A bare string is shorthand for the family name.',
+        example: { display: 'Bricolage Grotesque', body: 'Geist Mono', mono: 'Geist Mono' },
+      },
+      {
+        name: 'colors',
+        type: 'object',
+        required: false,
+        description:
+          'Per-token colors, split by mode. Token names are semantic — e.g. accent, bg-page, content-primary, border, bg-code, syntax-keyword, method-post.',
+        example: { light: { accent: '#077155' }, dark: { accent: '#15a07b' } },
+      },
+      {
+        name: 'typography',
+        type: 'object',
+        required: false,
+        description:
+          'Per-style type overrides, all values in px. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label.',
+        example: { 'display-h1': { size: 34, lineHeight: 42, letterSpacing: -1.5 } },
+      },
+      {
+        name: 'radius',
+        type: 'object',
+        required: false,
+        description: 'Corner radii in px (sm, md, lg, xl, full)',
+        example: { sm: 8, md: 12 },
+      },
+    ],
+  },
+  {
     name: 'colors',
     type: 'object',
     required: false,
-    description: 'Theme color configuration',
+    description:
+      'Legacy color shorthand. Still honoured, and applied after themeOverrides so an existing site never changes appearance because a preset was introduced. Prefer themeOverrides.colors for new configs.',
     children: [
-      { name: 'primary', type: 'string', required: false, description: 'Primary brand color (hex)', example: '#6366f1' },
-      { name: 'accent', type: 'string', required: false, description: 'Accent color for highlights', example: '#8b5cf6' },
+      { name: 'primary', type: 'string', required: false, description: 'Primary brand color (hex). Drives the whole accent ramp.', example: '#6366f1' },
+      { name: 'accent', type: 'string', required: false, description: 'Maps to the accent-strong token', example: '#8b5cf6' },
+      { name: 'background', type: 'string', required: false, description: 'Maps to the bg-page token' },
     ],
   },
   {
