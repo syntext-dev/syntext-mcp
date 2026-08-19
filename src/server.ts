@@ -154,7 +154,7 @@ export function createServer(): McpServer {
 
   server.tool(
     'get_config',
-    'Get the syntext.config.json schema and examples. This file configures your documentation project.',
+    'Get the syntext.json schema and examples. This file configures your documentation project — site metadata, navigation, theming (theme / themeOverrides), and structural feature flags. Legacy filenames syntext.config.json and stx.json are also accepted.',
     {
       example: z.enum(['full', 'minimal']).optional().describe('Get an example config instead of schema'),
     },
@@ -163,7 +163,7 @@ export function createServer(): McpServer {
         return {
           content: [{
             type: 'text',
-            text: `# Full syntext.config.json Example\n\n\`\`\`json\n${JSON.stringify(getExampleConfig(), null, 2)}\n\`\`\``,
+            text: `# Full syntext.json Example\n\n\`\`\`json\n${JSON.stringify(getExampleConfig(), null, 2)}\n\`\`\``,
           }],
         }
       }
@@ -172,7 +172,7 @@ export function createServer(): McpServer {
         return {
           content: [{
             type: 'text',
-            text: `# Minimal syntext.config.json\n\n\`\`\`json\n${JSON.stringify(getMinimalConfig(), null, 2)}\n\`\`\``,
+            text: `# Minimal syntext.json\n\n\`\`\`json\n${JSON.stringify(getMinimalConfig(), null, 2)}\n\`\`\``,
           }],
         }
       }
