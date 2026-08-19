@@ -86,7 +86,10 @@ describe('Config Schema', () => {
       
       expect(config.logo).toBeDefined()
       expect(config.favicon).toBeDefined()
-      expect(config.colors).toBeDefined()
+      // The example now demonstrates the current theming surface. `colors` is
+      // legacy shorthand and deliberately absent so AI clients copy themeOverrides.
+      expect(config.themeOverrides).toBeDefined()
+      expect(config.features).toBeDefined()
       expect(config.tabs).toBeDefined()
       expect(config.social).toBeDefined()
     })

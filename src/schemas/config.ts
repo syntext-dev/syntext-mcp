@@ -94,6 +94,22 @@ export const CONFIG_SCHEMA: ConfigField[] = [
     ],
   },
   {
+    name: 'features',
+    type: 'object',
+    required: false,
+    description:
+      'Structural feature flags — what the site CONTAINS, as opposed to how it is painted. A design that omits a control cannot be expressed with theme colors alone. Every default reproduces the behaviour that shipped before these flags existed, so a site is unaffected until it opts out. Unknown flags and wrong value types are reported as build warnings and ignored.',
+    children: [
+      { name: 'playground', type: 'boolean', required: false, description: 'The "Try it" request playground on API reference pages. Default true.', example: true },
+      { name: 'copyPageActions', type: 'boolean', required: false, description: 'The "Copy page" control and its open-in-AI menu. Independent of aiAssistant — you can drop this menu and keep the assistant. Default true.', example: true },
+      { name: 'sidebarMethodBadges', type: 'boolean', required: false, description: 'HTTP method chips (GET/POST/...) beside API nav items in the sidebar. Default true.', example: true },
+      { name: 'codeLanguageTabs', type: 'boolean', required: false, description: 'Per-language tabs (cURL / Node / Python / Go) in the request panel. Default true.', example: true },
+      { name: 'aiAssistant', type: 'boolean', required: false, description: 'Assistant entry points — "Ask Assistant" and agent mode. Default true.', example: true },
+      { name: 'parameterStyle', type: '"table" | "rows"', required: false, description: 'How API parameters are laid out: a status/description table, or stacked rows. Default "table".', example: 'table' },
+      { name: 'endpointBarAction', type: '"tryIt" | "copy" | "none"', required: false, description: 'Trailing control in the endpoint bar beside the method and path. Setting playground false implicitly drops a "tryIt" action, since the button would have nothing to open. Default "tryIt".', example: 'tryIt' },
+    ],
+  },
+  {
     name: 'navigation',
     type: 'NavigationItem[]',
     required: true,
@@ -196,8 +212,19 @@ export const EXAMPLE_CONFIG = {
   name: 'Acme API',
   logo: '/logo.svg',
   favicon: '/favicon.ico',
-  colors: {
-    primary: '#6366f1',
+  theme: 'default',
+  themeOverrides: {
+    fonts: { display: 'Bricolage Grotesque', body: 'Inter', mono: 'JetBrains Mono' },
+    colors: {
+      light: { accent: '#6366f1' },
+      dark: { accent: '#818cf8' },
+    },
+    radius: { sm: 6, md: 10 },
+  },
+  features: {
+    playground: true,
+    parameterStyle: 'table',
+    endpointBarAction: 'tryIt',
   },
   navigation: [
     {

@@ -64,7 +64,7 @@ describe('MCP protocol (in-memory transport)', () => {
   it('get_config returns the full example', async () => {
     const result = await client.callTool({ name: 'get_config', arguments: { example: 'full' } })
     const text = firstText(result)
-    expect(text).toContain('syntext.config.json')
+    expect(text).toContain('syntext.json')
     expect(text).toContain('```json')
   })
 
