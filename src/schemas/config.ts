@@ -101,12 +101,17 @@ export const CONFIG_SCHEMA: ConfigField[] = [
       'Structural feature flags — what the site CONTAINS, as opposed to how it is painted. A design that omits a control cannot be expressed with theme colors alone. Every default reproduces the behaviour that shipped before these flags existed, so a site is unaffected until it opts out. Unknown flags and wrong value types are reported as build warnings and ignored.',
     children: [
       { name: 'playground', type: 'boolean', required: false, description: 'The "Try it" request playground on API reference pages. Default true.', example: true },
-      { name: 'copyPageActions', type: 'boolean', required: false, description: 'The "Copy page" control and its open-in-AI menu. Independent of aiAssistant — you can drop this menu and keep the assistant. Default true.', example: true },
+      { name: 'copyPageActions', type: 'boolean | { guides?: boolean; api?: boolean }', required: false, description: 'The "Copy page" control and its open-in-AI menu. Independent of aiAssistant — you can drop this menu and keep the assistant. Accepts a boolean for both surfaces, or an object to differ between guide pages and API reference pages. Default true.', example: { guides: true, api: false } },
       { name: 'sidebarMethodBadges', type: 'boolean', required: false, description: 'HTTP method chips (GET/POST/...) beside API nav items in the sidebar. Default true.', example: true },
-      { name: 'codeLanguageTabs', type: 'boolean', required: false, description: 'Per-language tabs (cURL / Node / Python / Go) in the request panel. Default true.', example: true },
+      { name: 'codeLanguageSelector', type: '"dropdown" | "tabs"', required: false, description: 'How the request panel offers its languages (cURL / Node / Python / Go) — a compact dropdown or a horizontal tab row. Default "dropdown".', example: 'dropdown' },
+      { name: 'codeLanguageTabs', type: 'boolean', required: false, description: 'DEPRECATED and a no-op — it never controlled anything, because the request panel only ever had a dropdown. Use codeLanguageSelector instead.', example: true },
       { name: 'aiAssistant', type: 'boolean', required: false, description: 'Assistant entry points — "Ask Assistant" and agent mode. Default true.', example: true },
       { name: 'parameterStyle', type: '"table" | "rows"', required: false, description: 'How API parameters are laid out: a status/description table, or stacked rows. Default "table".', example: 'table' },
       { name: 'endpointBarAction', type: '"tryIt" | "copy" | "none"', required: false, description: 'Trailing control in the endpoint bar beside the method and path. Setting playground false implicitly drops a "tryIt" action, since the button would have nothing to open. Default "tryIt".', example: 'tryIt' },
+      { name: 'codeBlockStyle', type: '"pill" | "panel"', required: false, description: 'Code block chrome: "pill" floats a rounded header over the block, "panel" joins a bordered header rail to it. Default "pill".', example: 'pill' },
+      { name: 'sidebarStyle', type: '"collapsible" | "flat"', required: false, description: 'API sidebar groups: "collapsible" gives each group a disclosure toggle, "flat" shows every item permanently under a plain label. Default "collapsible".', example: 'collapsible' },
+      { name: 'panelLabels', type: '"inline" | "above"', required: false, description: 'Where the request/response captions sit: "inline" keeps them in the panel header beside the language selector, "above" lifts them out as a caption over the panel. Default "inline".', example: 'inline' },
+      { name: 'copyControlStyle', type: '"icon" | "label"', required: false, description: 'The panel copy action: "icon" is a square glyph button, "label" is the word "Copy" (becoming "Copied" on success). Default "icon".', example: 'icon' },
     ],
   },
   {
@@ -225,6 +230,11 @@ export const EXAMPLE_CONFIG = {
     playground: true,
     parameterStyle: 'table',
     endpointBarAction: 'tryIt',
+    codeLanguageSelector: 'dropdown',
+    codeBlockStyle: 'pill',
+    sidebarStyle: 'collapsible',
+    panelLabels: 'inline',
+    copyControlStyle: 'icon',
   },
   navigation: [
     {
