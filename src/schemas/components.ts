@@ -57,11 +57,36 @@ export const COMPONENTS: ComponentDefinition[] = [
 </CardGroup>`,
   },
   {
+    name: 'Playground',
+    description:
+      'An interactive API console the reader can send real requests from. Requests go directly from the browser to the target API — nothing is proxied — so the API must allow CORS from the doc site origin. A Playground with neither servers nor base-url has nothing to call and renders nothing.',
+    props: [
+      { name: 'method', type: 'string', required: false, description: 'HTTP method, also selecting the method pill colour. Default GET.' },
+      { name: 'path', type: 'string', required: false, description: 'Request path, shown in an editable field. Default /.' },
+      { name: 'servers', type: 'string', required: false, description: 'JSON array of { name, url } environments, rendered as the environment toggle.' },
+      { name: 'base-url', type: 'string', required: false, description: 'Shorthand for a single unnamed environment. Ignored when servers is set.' },
+      { name: 'auth-label', type: 'string', required: false, description: 'Placeholder for the credential field. Default Authorization.' },
+      { name: 'key-label', type: 'string', required: false, description: 'Text of the chip beside the credential field, e.g. "Sandbox key".' },
+      { name: 'body', type: 'string', required: false, description: 'Initial request body. Only rendered for methods that take one; the body tab then opens by default.' },
+    ],
+    syntax: '<Playground method="POST" path="/v1/transfers" servers=\'[{"name":"Sandbox","url":"https://sandbox.api.example.com"}]\' />',
+    example: `<Playground
+  method="POST"
+  path="/v1/transfers"
+  servers='[{"name":"Sandbox","url":"https://sandbox.api.example.com"},
+            {"name":"Production","url":"https://api.example.com"}]'
+  key-label="Sandbox key"
+  body='{"amount": "100.00", "currency": "USDC"}'
+/>`,
+  },
+  {
     name: 'Hero',
     description: 'Large hero section for landing pages. Typically used at the top of index.mdx.',
     props: [
       { name: 'title', type: 'string', required: false, description: 'Hero heading (or use h1 inside)' },
       { name: 'description', type: 'string', required: false, description: 'Subtitle text' },
+      { name: 'variant', type: '"banner" | "card"', required: false, description: 'Layout. "banner" (default) is full-width; "card" is an inset panel with the copy on the left and a code fence beside it.' },
+      { name: 'eyebrow', type: 'string', required: false, description: 'Small uppercase label above the heading.' },
     ],
     syntax: '<Hero>\n  # Main Heading\n  Subtitle description here\n</Hero>',
     example: `<Hero>

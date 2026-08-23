@@ -73,6 +73,14 @@ export const CONFIG_SCHEMA: ConfigField[] = [
         example: { 'display-h1': { size: 34, lineHeight: 42, letterSpacing: -1.5 } },
       },
       {
+        name: 'apiTypography',
+        type: 'object',
+        required: false,
+        description:
+          'Overrides for the denser scale API reference pages run, scoped to that surface only. Same text-style names as typography; a partial patch inherits the rest from the base scale.',
+        example: { 'display-h1': { size: 32, lineHeight: 38 } },
+      },
+      {
         name: 'radius',
         type: 'object',
         required: false,
@@ -91,6 +99,18 @@ export const CONFIG_SCHEMA: ConfigField[] = [
       { name: 'primary', type: 'string', required: false, description: 'Primary brand color (hex). Drives the whole accent ramp.', example: '#6366f1' },
       { name: 'accent', type: 'string', required: false, description: 'Maps to the accent-strong token', example: '#8b5cf6' },
       { name: 'background', type: 'string', required: false, description: 'Maps to the bg-page token' },
+    ],
+  },
+  {
+    name: 'topbarCta',
+    type: 'object',
+    required: false,
+    description:
+      'Call-to-action button in the top bar, at the trailing edge beside the theme toggle. Omit it and no button renders.',
+    example: { label: 'Get API keys', url: 'https://dashboard.example.com/keys' },
+    children: [
+      { name: 'label', type: 'string', required: true, description: 'Button text.', example: 'Get API keys' },
+      { name: 'url', type: 'string', required: true, description: 'Destination URL.', example: 'https://dashboard.example.com/keys' },
     ],
   },
   {
