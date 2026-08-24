@@ -31,6 +31,8 @@ export const COMPONENTS: ComponentDefinition[] = [
       { name: 'title', type: 'string', required: true, description: 'Card heading text' },
       { name: 'icon', type: 'string', required: false, description: 'Icon name (e.g., "rocket", "code", "book") or emoji' },
       { name: 'href', type: 'string', required: false, description: 'Link destination. Makes entire card clickable' },
+      { name: 'cta', type: 'string', required: false, description: 'Call-to-action text with a trailing arrow, pinned to the bottom of the card so every card in a row aligns.' },
+      { name: 'methods', type: 'string', required: false, description: 'Comma-separated HTTP methods rendered as coloured chips at the foot of the card, e.g. "POST,GET". Use on API resource listings.' },
     ],
     syntax: '<Card title="Title" icon="rocket" href="/path">\n  Description text here\n</Card>',
     example: `<Card title="Getting Started" icon="rocket" href="/quickstart">
