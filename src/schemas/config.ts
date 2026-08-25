@@ -26,6 +26,12 @@ export const CONFIG_SCHEMA: ConfigField[] = [
     required: false,
     description: 'Path to logo image (relative to docs folder or URL)',
     example: '/logo.svg',
+      children: [
+      { name: 'light', type: 'string', required: false, description: 'Logo shown in light mode.' },
+      { name: 'dark', type: 'string', required: false, description: 'Logo shown in dark mode.' },
+      { name: 'type', type: '"mark" | "wordmark"', required: false, description: 'Set "wordmark" when the logo image already contains the product name — the header then omits the separate name text instead of repeating it. Default "mark".' },
+      { name: 'suffix', type: 'string', required: false, description: 'Muted lowercase word beside the brand, e.g. "docs". Replaces the uppercase DOCS chip on API reference pages.' },
+    ],
   },
   {
     name: 'favicon',
