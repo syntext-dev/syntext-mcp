@@ -75,7 +75,7 @@ type: major
     fields: [
       { name: 'title', type: 'string', required: true, description: 'Page title (often brand name)' },
       { name: 'description', type: 'string', required: false, description: 'Hero subtitle or tagline' },
-      { name: 'layout', type: 'string', required: false, description: 'Page layout', values: ['default', 'centered', 'full-width'] },
+      { name: 'layout', type: 'string', required: false, description: 'Page layout. default: sidebar + content + on-this-page column. centered: no sidebars, centred content. full-width: single full-width column. landing: keeps the left sidebar, drops the on-this-page column and centres a wider content column — a homepage inside the docs navigation.', values: ['default', 'centered', 'full-width', 'landing'] },
       { name: 'hideTitle', type: 'boolean', required: false, description: 'Hide the auto-generated title (use Hero instead)' },
     ],
     example: `---

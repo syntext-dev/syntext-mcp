@@ -75,7 +75,7 @@ export const CONFIG_SCHEMA: ConfigField[] = [
         type: 'object',
         required: false,
         description:
-          'Per-style type overrides, all values in px. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label.',
+          'Per-style type overrides. size and letterSpacing are px; lineHeight is px when above 4, a unitless multiplier at 4 or below, or "normal" — multipliers recompute per element, px is inherited verbatim. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label.',
         example: { 'display-h1': { size: 34, lineHeight: 42, letterSpacing: -1.5 } },
       },
       {
@@ -137,6 +137,7 @@ export const CONFIG_SCHEMA: ConfigField[] = [
       { name: 'codeBlockStyle', type: '"pill" | "panel"', required: false, description: 'Code block chrome: "pill" floats a rounded header over the block, "panel" joins a bordered header rail to it. Default "pill".', example: 'pill' },
       { name: 'shellWidth', type: '"contained" | "full"', required: false, description: 'Horizontal geometry of the page shell. "contained" keeps a large responsive inset on both sides; "full" runs the shell edge to edge so the sidebar starts at the viewport edge and columns are separated by rules. Default "contained".', example: 'contained' },
       { name: 'themeToggle', type: 'boolean', required: false, description: 'The light/dark toggle in the top bar. Set false for a design that has no theme control; a stored preference still applies. Default true.', example: true },
+      { name: 'apiSectionLabel', type: 'boolean', required: false, description: 'Show the page section as an eyebrow above API reference page titles. Off by default; guide pages always show one.', example: false },
       { name: 'responseStyle', type: '"schema" | "prose"', required: false, description: 'How endpoint responses are presented. "schema" (default) is a status table plus a per-status field tree. "prose" is a "Returns" heading carrying the success response description from the spec — it drops the status table and the field tree, so it suits specs with rich descriptions and reads thin on terse ones.', example: 'schema' },
       { name: 'endpointBarUrl', type: '"path" | "full"', required: false, description: 'Whether the endpoint bar shows just the path or the full request URL with the OpenAPI server host prefixed. Default "path".', example: 'path' },
       { name: 'navStyle', type: '"split" | "single"', required: false, description: 'Top bar rows: "split" keeps the brand and actions on one line with the section tabs on a second, "single" pulls the tabs up beside the brand so the whole header is one row. "single" also collapses the mobile header to a single bar. Default "split".', example: 'split' },
@@ -149,7 +150,7 @@ export const CONFIG_SCHEMA: ConfigField[] = [
     name: 'navigation',
     type: 'NavigationItem[]',
     required: true,
-    description: 'Sidebar navigation structure. Array of groups with pages.',
+    description: 'Sidebar navigation structure. Array of groups with pages. A group may set `tab` to the name of a header tab: its pages then appear under that tab regardless of their URL, overriding the URL-prefix match. A tab name not present in `tabs` is ignored, and nested groups inherit their parent tab.',
     example: [
       {
         group: 'Getting Started',
