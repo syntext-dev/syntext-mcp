@@ -75,7 +75,7 @@ export const CONFIG_SCHEMA: ConfigField[] = [
         type: 'object',
         required: false,
         description:
-          'Per-style type overrides. size and letterSpacing are px; lineHeight is px when above 4, a unitless multiplier at 4 or below, or "normal" — multipliers recompute per element, px is inherited verbatim. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label.',
+          'Per-style type overrides. size and letterSpacing are px; lineHeight is px when above 4, a unitless multiplier at 4 or below, or "normal" — multipliers recompute per element, px is inherited verbatim. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label, card-title.',
         example: { 'display-h1': { size: 34, lineHeight: 42, letterSpacing: -1.5 } },
       },
       {
@@ -105,6 +105,17 @@ export const CONFIG_SCHEMA: ConfigField[] = [
       { name: 'primary', type: 'string', required: false, description: 'Primary brand color (hex). Drives the whole accent ramp.', example: '#6366f1' },
       { name: 'accent', type: 'string', required: false, description: 'Maps to the accent-strong token', example: '#8b5cf6' },
       { name: 'background', type: 'string', required: false, description: 'Maps to the bg-page token' },
+    ],
+  },
+  {
+    name: 'search',
+    type: 'object',
+    required: false,
+    description: 'Site search. The placeholder labels the search button in the header on guide and API pages.',
+    example: { enabled: true, placeholder: 'Search docs...' },
+    children: [
+      { name: 'enabled', type: 'boolean', required: false, description: 'Show search. Default true.', example: true },
+      { name: 'placeholder', type: 'string', required: false, description: 'Label on the header search button. Default "Search...".', example: 'Search docs...' },
     ],
   },
   {
