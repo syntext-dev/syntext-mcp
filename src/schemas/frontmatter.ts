@@ -112,6 +112,8 @@ export const COMMON_FIELDS: FrontmatterField[] = [
   { name: 'icon', type: 'string', required: false, description: 'Navigation icon' },
   { name: 'sidebarTitle', type: 'string', required: false, description: 'Shorter navigation title' },
   { name: 'hidden', type: 'boolean', required: false, description: 'Hide from navigation (still accessible via URL)' },
+  { name: 'section', type: 'string', required: false, description: 'Section the page belongs to — which header tab it sits under, which sidebar it renders, and how far prev/next pagination can reach. Use a name from `tabs` verbatim. Resolution order: path prefix, then this field, then a tab whose URL prefix matches the slug, then navigation[].tab — so on a site with tabs a URL match can override this field.' },
+  { name: 'category', type: 'string', required: false, description: 'Coarse alias for `section`, handy when migrating. api/reference give API Reference, sdk/client/library give SDKs, changelog/releases give Changelog, guide/tutorial give Guides. Any other value is ignored, and `section` wins when both are set.' },
 ]
 
 /**

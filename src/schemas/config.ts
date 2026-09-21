@@ -75,7 +75,7 @@ export const CONFIG_SCHEMA: ConfigField[] = [
         type: 'object',
         required: false,
         description:
-          'Per-style type overrides. size and letterSpacing are px; lineHeight is px when above 4, a unitless multiplier at 4 or below, or "normal" — multipliers recompute per element, px is inherited verbatim. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label, card-title.',
+          'Per-style type overrides. size and letterSpacing are px; lineHeight is px when above 4, a unitless multiplier at 4 or below, or "normal" — multipliers recompute per element, px is inherited verbatim. Style names: display-h1, heading-h2..h4, body-lg/md/sm, label-md/sm, strong-sm, strong-md, code-md/sm, caption, eyebrow, nav-item, nav-section, mono-label, card-title.',
         example: { 'display-h1': { size: 34, lineHeight: 42, letterSpacing: -1.5 } },
       },
       {
@@ -92,6 +92,14 @@ export const CONFIG_SCHEMA: ConfigField[] = [
         required: false,
         description: 'Corner radii in px (sm, md, lg, xl, full)',
         example: { sm: 8, md: 12 },
+      },
+      {
+        name: 'shadow',
+        type: 'object',
+        required: false,
+        description:
+          'Elevation, as raw CSS box-shadow values. Split by mode because a shadow that reads on a light page is invisible on a dark one. Each mode takes sm, md and lg.',
+        example: { light: { sm: '0 1px 2px rgba(0,0,0,.06)' }, dark: { sm: '0 1px 2px rgba(0,0,0,.6)' } },
       },
     ],
   },
@@ -123,11 +131,23 @@ export const CONFIG_SCHEMA: ConfigField[] = [
     type: 'object',
     required: false,
     description:
-      'Call-to-action button in the top bar, at the trailing edge beside the theme toggle. Omit it and no button renders.',
+      'Call-to-action button in the top bar, at the trailing edge beside the theme toggle. Omitting it does NOT remove the button — the historical "Get Started" link pointing at /getting-started is kept so existing sites are unchanged. Set it to null to render no button at all. Applies to guide and API reference pages alike.',
     example: { label: 'Get API keys', url: 'https://dashboard.example.com/keys' },
     children: [
-      { name: 'label', type: 'string', required: true, description: 'Button text.', example: 'Get API keys' },
-      { name: 'url', type: 'string', required: true, description: 'Destination URL.', example: 'https://dashboard.example.com/keys' },
+      { name: 'label', type: 'string', required: false, description: 'Button text. Defaults to "Get Started".', example: 'Get API keys' },
+      { name: 'url', type: 'string', required: false, description: 'Destination URL. Defaults to "/getting-started".', example: 'https://dashboard.example.com/keys' },
+    ],
+  },
+  {
+    name: 'status',
+    type: 'object | null',
+    required: false,
+    description:
+      'Status line pinned to the bottom of the left sidebar — a dot plus a short static label, optionally linking to a status page. Nothing renders without a label, and nothing renders on layouts that have no sidebar (layout: centered / full-width). Omit it or set null for no status line, which is the default. The label is not polled; it changes only when you rebuild.',
+    example: { label: 'All systems operational', url: 'https://status.example.com' },
+    children: [
+      { name: 'label', type: 'string', required: true, description: 'Text beside the dot. Without it the line does not render, url or not.', example: 'All systems operational' },
+      { name: 'url', type: 'string', required: false, description: 'Optional destination. With a url the line is a link opening in a new tab; without one it is plain text.', example: 'https://status.example.com' },
     ],
   },
   {
@@ -188,9 +208,10 @@ export const CONFIG_SCHEMA: ConfigField[] = [
     name: 'topbarLinks',
     type: 'Link[]',
     required: false,
-    description: 'Links in the header (right side)',
+    description:
+      'Plain-text links in the header, rendered before the topbarCta button. Each entry needs both label and url; incomplete entries are skipped. Replaces the deprecated dashboardUrl, whose label was always "Dashboard".',
     example: [
-      { label: 'Dashboard', url: 'https://dashboard.acme.com' },
+      { label: 'Sign in', url: 'https://dashboard.acme.com' },
     ],
   },
   {
