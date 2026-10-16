@@ -67,7 +67,7 @@ export const CONFIG_SCHEMA: ConfigField[] = [
         type: 'object',
         required: false,
         description:
-          'Per-token colors, split by mode. Token names are semantic — e.g. accent, bg-page, content-primary, border, bg-code, syntax-keyword, method-post.',
+          'Per-token colors, split by mode. Token names are semantic. Text and surfaces: content-primary/secondary/muted/inverse, bg-page, bg-sidebar, bg-subtle, bg-raised, bg-header, border, border-subtle. Code: content-code, bg-code, bg-code-header, border-code, content-code-inline and bg-code-inline (inline code in prose, separate from code blocks), syntax-text/keyword/string/key/number/punct/comment/inserted/deleted. Accent: accent, accent-hover, accent-strong, accent-subtle, accent-muted, accent-fill with on-accent (solid accent buttons), cta-bg/cta-fg (top bar button), hero-card-bg/fg. Callouts: status-info, status-info-bg, status-info-text (<Note>), status-warning, status-warning-bg, status-warning-text (<Warning>/<Caution>), status-success, status-success-bg, status-error. API: method-get/post/put/patch/delete/neutral and each -bg, param-name, param-type, param-required, param-required-bg. Other: scrollbar (scrollbar thumb). Every theme is held to WCAG AA: text-only tokens are lightened or darkened as far as AA needs, and any other pair an override breaks is reported in the build log with the token to change.',
         example: { light: { accent: '#077155' }, dark: { accent: '#15a07b' } },
       },
       {
