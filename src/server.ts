@@ -199,7 +199,7 @@ export function createServer(): McpServer {
       }
 
       const schema = getConfigSchema()
-      let output = '# syntext.config.json Schema\n\n'
+      let output = '# syntext.json Schema\n\n'
 
       for (const field of schema) {
         const required = field.required ? ' (required)' : ''
@@ -542,7 +542,7 @@ hideTitle: true
 
   // Config reference as a resource
   server.resource(
-    'syntext.config.json Reference',
+    'syntext.json Reference',
     'syntext://config',
     async () => {
       return {

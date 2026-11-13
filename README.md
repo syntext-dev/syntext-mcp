@@ -11,7 +11,7 @@ When you're using an AI coding assistant to write documentation for your Syntext
 - Which MDX components are available (`<Card>`, `<CodeGroup>`, `<Note>`, etc.)
 - What props each component accepts
 - How to structure frontmatter for different page types
-- How to configure `syntext.config.json`
+- How to configure `syntext.json`
 
 This MCP server provides that knowledge to your AI assistant, so it can generate correct, valid Syntext documentation without hallucinating component names or props.
 
@@ -168,7 +168,7 @@ auth: required
 ```
 
 ### `get_config`
-Get `syntext.config.json` schema with field descriptions.
+Get the `syntext.json` schema with field descriptions.
 
 **Parameters:**
 - `example` (optional): `"full"` or `"minimal"` — return an example config instead of the schema
@@ -240,7 +240,7 @@ src/
 └── schemas/
     ├── components.ts     # Component definitions
     ├── frontmatter.ts    # Page type schemas
-    ├── config.ts         # syntext.config.json schema
+    ├── config.ts         # syntext.json schema
     └── validator.ts      # MDX validation
 ```
 

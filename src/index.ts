@@ -6,7 +6,7 @@
  * Provides tools for:
  * - Getting MDX component syntax and examples
  * - Getting frontmatter schema for different page types
- * - Getting syntext.config.json schema
+ * - Getting the syntext.json schema
  * - Validating MDX content
  *
  * Transport: stdio (newline-delimited JSON-RPC, per the MCP spec).
