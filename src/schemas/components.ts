@@ -3,6 +3,8 @@
  * This is the core knowledge that helps AI assistants generate valid Syntext docs.
  */
 
+import { HOME_COMPONENTS, HOME_COMPONENT_NAMES } from './components-home'
+
 export interface ComponentDefinition {
   name: string
   description: string
@@ -84,23 +86,36 @@ export const COMPONENTS: ComponentDefinition[] = [
   },
   {
     name: 'Hero',
-    description: 'Large hero section for landing pages. Typically used at the top of index.mdx.',
+    description: 'Large hero section at the top of a page, typically the home page (index.mdx). Without title it is a banner whose markdown children are the headline, lede and links. With a title prop (doc engine v2) it draws the preset\'s home hero: a <SearchBar> child is its search box and a line of links becomes its buttons (the first is primary). A page whose body opens with <Hero title> uses it as its page head (no breadcrumbs, h1 or lede).',
     props: [
-      { name: 'title', type: 'string', required: false, description: 'Hero heading (or use h1 inside)' },
-      { name: 'description', type: 'string', required: false, description: 'Subtitle text' },
-      { name: 'variant', type: '"banner" | "card"', required: false, description: 'Layout. "banner" (default) is full-width; "card" is an inset panel with the copy on the left and a code fence beside it.' },
-      { name: 'eyebrow', type: 'string', required: false, description: 'Small uppercase label above the heading.' },
+      { name: 'title', type: 'string', required: false, description: 'Doc engine v2: draws the preset\'s home hero with this headline instead of the banner. Without it, put the heading inside as markdown (# Heading).' },
+      { name: 'description', type: 'string', required: false, description: 'With title: the lede under the headline.' },
+      { name: 'install', type: 'string', required: false, description: 'With title: a shell command drawn where the preset shows its install block, e.g. "npm i @acme/sdk".' },
+      { name: 'eyebrow', type: 'string', required: false, description: 'Small uppercase label above the headline. Shown on the card variant, and as the kicker of a home hero (with title).' },
+      { name: 'variant', type: '"banner" | "card"', required: false, description: 'Banner form only. "banner" (default) is full-width; "card" is an inset panel with the copy on the left and a code fence beside it.' },
     ],
-    syntax: '<Hero>\n  # Main Heading\n  Subtitle description here\n</Hero>',
-    example: `<Hero>
-  # Welcome to Acme API
-  Build powerful integrations with our developer-friendly API.
-</Hero>`,
-  },
+    syntax: '<Hero title="Heading" description="Lede">\n  <SearchBar mode="both" />\n\n  [Get started](/quickstart) [API reference](/api-reference)\n</Hero>',
+    example: `<Hero title="Acme API" description="Everything you need to move money programmatically." install="npm i @acme/sdk">
+  <SearchBar mode="both" suggestions={["API keys", "Webhooks"]} />
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // CODE COMPONENTS
-  // ═══════════════════════════════════════════════════════════════════════════
+  [Get started](/quickstart) [API reference](/api-reference)
+</Hero>`,
+    notes: 'title, description and install are doc engine v2 only; v1 keeps the banner and ignores them. The banner form (<Hero> with a markdown # heading inside) still works everywhere.',
+  },
+  {
+    name: 'SearchBar',
+    description: 'A search box in the page body that opens site search (the same modal as the header and Cmd/Ctrl K). Inside a <Hero title>, or with size="lg", it is the preset\'s home search box, which can also ask the AI assistant and show suggestion chips. Self-closing; takes no children.',
+    props: [
+      { name: 'placeholder', type: 'string', required: false, description: 'Text inside the box. Defaults to the site\'s search.placeholder.' },
+      { name: 'kbd', type: '"true" | "false"', required: false, description: 'Whether to show the keyboard-shortcut hint. Set "false" in narrow columns.', default: 'true' },
+      { name: 'size', type: '"lg"', required: false, description: 'Doc engine v2: lg draws the preset\'s home search box (inside a <Hero title>, the box is always the home one).' },
+      { name: 'mode', type: '"search" | "ask" | "both"', required: false, description: 'Home search box: search opens search; ask asks the assistant; both shows the Search / Ask switch. ask and both need the assistant.', default: 'search' },
+      { name: 'suggestions', type: 'string[] | "popular"', required: false, description: 'Home search box: suggestion chips, e.g. suggestions={["API keys", "Deploy"]}; each searches for itself. suggestions="popular" shows the most read pages as links.' },
+    ],
+    syntax: '<SearchBar />',
+    example: '<SearchBar size="lg" mode="both" suggestions="popular" />',
+    notes: 'size, mode and suggestions are doc engine v2 only.',
+  },
   {
     name: 'CodeGroup',
     description: 'Tabbed code blocks for showing the same example in multiple languages.',
@@ -312,9 +327,10 @@ curl -X GET https://api.acme.com/v1/users/user_123 \\
   },
   {
     name: 'Step',
-    description: 'Individual step within a Steps container.',
+    description: 'Individual step within a Steps container (or a <QuickStart> on doc engine v2).',
     props: [
       { name: 'title', type: 'string', required: true, description: 'Step heading' },
+      { name: 'href', type: 'string', required: false, description: 'Inside a <QuickStart> only: the page the step links to. Such a step may be self-closing.' },
     ],
     syntax: '<Step title="Step title">\n  Step content\n</Step>',
     example: `<Step title="Configure authentication">
@@ -324,6 +340,7 @@ curl -X GET https://api.acme.com/v1/users/user_123 \\
   \`\`\`
 </Step>`,
   },
+  ...HOME_COMPONENTS,
 ]
 
 /**
@@ -346,11 +363,13 @@ export function getComponent(name: string): ComponentDefinition | undefined {
 export function getComponentCategories(): Record<string, string[]> {
   return {
     layout: ['Card', 'CardGroup', 'Hero'],
+    home: ['Hero', 'SearchBar', ...HOME_COMPONENT_NAMES],
     code: ['CodeGroup'],
     callouts: ['Note', 'Tip', 'Warning', 'Danger'],
     interactive: ['Tabs', 'Expandable'],
     api: ['ParamField', 'ResponseField'],
     media: ['Frame', 'Video'],
     steps: ['Steps', 'Step'],
+    navigation: ['SearchBar'],
   }
 }

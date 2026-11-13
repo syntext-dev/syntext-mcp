@@ -21,7 +21,11 @@ import {
   getExampleConfig,
   getMinimalConfig,
   validateMdx,
+  starterIndexMdx,
 } from './schemas/index.js'
+
+/** Kept equal to package.json version (tests/protocol.test.ts checks it). */
+export const SERVER_VERSION = '0.2.0'
 
 function formatComponent(comp: ReturnType<typeof getComponent>): string {
   if (!comp) return ''
@@ -69,7 +73,7 @@ function readOnly(title: string) {
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'syntext',
-    version: '0.1.3',
+    version: SERVER_VERSION,
   })
 
   // ═════════════════════════════════════════════════════════════════════════════
@@ -78,10 +82,10 @@ export function createServer(): McpServer {
 
   server.tool(
     'get_components',
-    'Get Syntext MDX components with their props, syntax, and examples. Use this to learn how to write valid Syntext documentation.',
+    'Get Syntext MDX components with their props, syntax, and examples. Use this to learn how to write valid Syntext documentation. The docs home page is index.mdx built from components: category "home" lists them (<Hero title>, <SearchBar>, <SectionCards>, <QuickStart>, <ApiGroups>, <SdkList>, <CommandList>, <PopularPages>, <LatestUpdates>, <SupportCard>; doc engine v2). Used empty and self-closing (e.g. <SectionCards />), a home block fills itself from the site.',
     {
       name: z.string().optional().describe('Specific component name (e.g., "Card", "CodeGroup"). Omit to get all components.'),
-      category: z.enum(['layout', 'code', 'callouts', 'interactive', 'api', 'media', 'steps']).optional().describe('Filter by category'),
+      category: z.enum(['layout', 'home', 'navigation', 'code', 'callouts', 'interactive', 'api', 'media', 'steps']).optional().describe('Filter by category'),
     },
     TOOL_ANNOTATIONS.get_components,
     async ({ name, category }) => {
@@ -122,7 +126,7 @@ export function createServer(): McpServer {
 
   server.tool(
     'get_frontmatter',
-    'Get frontmatter schema for Syntext MDX pages. Every page needs frontmatter with at least a title.',
+    'Get frontmatter schema for Syntext MDX pages. Every page needs frontmatter with at least a title. For the home page (index.mdx) use pageType "landing": layout: wide gives the full-width home frame, and the home frontmatter key is deprecated in favour of home components in the page body.',
     {
       pageType: z.enum(['guide', 'api-reference', 'changelog', 'landing', 'sdk']).optional().describe('Page type to get specific fields for'),
     },
@@ -142,7 +146,8 @@ export function createServer(): McpServer {
         for (const field of fields) {
           const required = field.required ? ' (required)' : ''
           const values = field.values ? ` Values: ${field.values.join(', ')}` : ''
-          output += `- **${field.name}**: \`${field.type}\`${required} — ${field.description}${values}\n`
+          const deprecated = field.deprecated ? ` **Deprecated:** use ${field.deprecated}.` : ''
+          output += `- **${field.name}**: \`${field.type}\`${required} — ${field.description}${values}${deprecated}\n`
         }
 
         output += `\n### Example\n\n\`\`\`yaml\n${schema.example}\n\`\`\`\n`
@@ -284,9 +289,9 @@ export function createServer(): McpServer {
 
   server.tool(
     'create_page',
-    'Generate a complete Syntext MDX page template with proper frontmatter and structure. Returns the template as text; does not create or save a file.',
+    'Generate a complete Syntext MDX page template with proper frontmatter and structure. Returns the template as text; does not create or save a file. pageType "landing" is the docs home (index.mdx): a page built from the home components (<Hero title> with a <SearchBar>, <SectionCards />, <LatestUpdates />) with layout: wide, the same starter a new Syntext project gets.',
     {
-      pageType: z.enum(['guide', 'api-reference', 'quickstart', 'landing']).describe('Type of page to create'),
+      pageType: z.enum(['guide', 'api-reference', 'quickstart', 'landing']).describe('Type of page to create. landing is the home page, index.mdx'),
       title: z.string().describe('Page title'),
       description: z.string().optional().describe('Page description'),
     },
@@ -455,48 +460,7 @@ pnpm add @example/sdk
           break
 
         case 'landing':
-          content = `---
-title: ${title}
-description: ${description || 'Welcome to our documentation.'}
-layout: centered
-hideTitle: true
----
-
-<Hero>
-  # ${title}
-  
-  ${description || 'Build amazing things with our developer-friendly platform.'}
-</Hero>
-
-<CardGroup cols={3}>
-  <Card title="Quick Start" icon="rocket" href="/quickstart">
-    Get up and running in 5 minutes.
-  </Card>
-  <Card title="Guides" icon="book" href="/guides">
-    Learn best practices and patterns.
-  </Card>
-  <Card title="API Reference" icon="code" href="/api-reference">
-    Explore our REST API endpoints.
-  </Card>
-</CardGroup>
-
-## Features
-
-<CardGroup cols={2}>
-  <Card title="Easy Integration" icon="zap">
-    Simple SDKs for every major language.
-  </Card>
-  <Card title="Real-time Updates" icon="globe">
-    Webhooks and streaming for live data.
-  </Card>
-  <Card title="Enterprise Ready" icon="shield">
-    SOC 2 compliant with 99.9% uptime.
-  </Card>
-  <Card title="Great Support" icon="users">
-    Dedicated support for all plans.
-  </Card>
-</CardGroup>
-`
+          content = starterIndexMdx({ title, description })
           break
       }
 

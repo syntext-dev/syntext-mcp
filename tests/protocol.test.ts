@@ -6,7 +6,8 @@
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
-import { createServer } from '../src/server'
+import { readFileSync } from 'node:fs'
+import { createServer, SERVER_VERSION } from '../src/server'
 
 type TextContent = { type: 'text'; text: string }
 
@@ -117,5 +118,48 @@ describe('MCP protocol (in-memory transport)', () => {
     expect(result.contents[0].mimeType).toBe('application/json')
     const parsed = JSON.parse(String(result.contents[0].text)) as { name?: string }
     expect(parsed.name).toBeDefined()
+  })
+
+  it('reports the package version', () => {
+    const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string }
+    expect(SERVER_VERSION).toBe(pkg.version)
+    expect(client.getServerVersion()?.version).toBe(pkg.version)
+  })
+
+  it('create_page landing returns the home starter built from components', async () => {
+    const result = await client.callTool({
+      name: 'create_page',
+      arguments: { pageType: 'landing', title: 'Acme', description: 'Docs for Acme.' },
+    })
+    const text = firstText(result)
+    expect(text).toContain('layout: wide')
+    expect(text).toContain('<Hero title="Acme" description="Docs for Acme.">')
+    expect(text).toContain('<SectionCards />')
+    expect(text).toContain('<LatestUpdates count={3} />')
+    expect(text).not.toContain('Generated content has some issues')
+  })
+
+  it('get_components lists the home category', async () => {
+    const result = await client.callTool({ name: 'get_components', arguments: { category: 'home' } })
+    const text = firstText(result)
+    for (const name of ['Hero', 'SearchBar', 'SectionCards', 'LatestUpdates', 'SupportCard']) {
+      expect(text).toContain(`## ${name}`)
+    }
+    expect(text).not.toContain('## CodeGroup')
+  })
+
+  it('describes the home as index.mdx built from components', async () => {
+    const { tools } = await client.listTools()
+    const byName = Object.fromEntries(tools.map(t => [t.name, t.description ?? '']))
+    expect(byName.get_components).toContain('index.mdx built from components')
+    expect(byName.create_page).toContain('index.mdx')
+    expect(byName.get_frontmatter).toContain('layout: wide')
+  })
+
+  it('get_frontmatter landing marks home as deprecated', async () => {
+    const result = await client.callTool({ name: 'get_frontmatter', arguments: { pageType: 'landing' } })
+    const text = firstText(result)
+    expect(text).toMatch(/\*\*home\*\*.*\*\*Deprecated:\*\*/)
+    expect(text).toContain('wide')
   })
 })

@@ -10,6 +10,8 @@ export interface FrontmatterField {
   description: string
   example?: string
   values?: string[]
+  /** Set when the field is deprecated: what to use instead. */
+  deprecated?: string
 }
 
 export interface PageTypeSchema {
@@ -71,18 +73,18 @@ type: major
   },
   {
     type: 'landing',
-    description: 'Landing/index page with hero section and feature cards.',
+    description: "The home page (index.mdx). On doc engine v2 the home is this page's own content, written with the home components (<Hero title>, <SearchBar>, <SectionCards>, <QuickStart>, <LatestUpdates>…), usually with layout: wide. The generated home (home frontmatter, or an index with no home components) is deprecated and stops on 27 November 2026.",
     fields: [
       { name: 'title', type: 'string', required: true, description: 'Page title (often brand name)' },
       { name: 'description', type: 'string', required: false, description: 'Hero subtitle or tagline' },
-      { name: 'layout', type: 'string', required: false, description: 'Page layout. default: sidebar + content + on-this-page column. centered: no sidebars, centred content. full-width: single full-width column. landing: keeps the left sidebar, drops the on-this-page column and centres a wider content column — a homepage inside the docs navigation.', values: ['default', 'centered', 'full-width', 'landing'] },
-      { name: 'hideTitle', type: 'boolean', required: false, description: 'Hide the auto-generated title (use Hero instead)' },
+      { name: 'layout', type: 'string', required: false, description: 'Page layout. default: sidebar + content + on-this-page column. centered: no sidebars, centred content. full-width: single full-width column. landing: keeps the left sidebar, drops the on-this-page column and centres a wider content column — a homepage inside the docs navigation. wide (doc engine v2): the header, the body across the page, then the footer; no sidebar, TOC or pager. Home components run full-bleed, other content sits in a centred column. Use it for a home built from the home components; v1 treats it as default.', values: ['default', 'centered', 'full-width', 'landing', 'wide'] },
+      { name: 'hideTitle', type: 'boolean', required: false, description: 'Hide the auto-generated title (use Hero instead). Not needed when the body opens with <Hero title>, which replaces the page head.' },
+      { name: 'home', type: 'object | false', required: false, description: 'Deprecated: the generated docs home built from blocks ({ hero, blocks }); it stops on 27 November 2026. home: false opts the index in to rendering its own content (the default once the body uses a home component). Write the home with the home components in the page body instead, or convert it in the dashboard (Appearance › Convert home to content).', deprecated: 'the home components in the index page body' },
     ],
     example: `---
 title: Acme API Documentation
 description: Build powerful integrations with our developer-friendly API.
-layout: centered
-hideTitle: true
+layout: wide
 ---`,
   },
   {

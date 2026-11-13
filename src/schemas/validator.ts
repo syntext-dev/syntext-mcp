@@ -25,7 +25,22 @@ export interface ValidationWarning {
 
 const VALID_COMPONENT_NAMES = new Set(COMPONENTS.map(c => c.name))
 
-const SELF_CLOSING_COMPONENTS = new Set(['Video', 'ParamField', 'ResponseField'])
+/** Components that never take children, so they never need a closing tag. */
+const SELF_CLOSING_COMPONENTS = new Set(['Video', 'ParamField', 'ResponseField', 'SearchBar', 'LatestUpdates'])
+
+/**
+ * Opening tags of a component that are not self-closing. `<SectionCards />`
+ * (any component written `<Name ... />`) needs no closing tag. Attribute values
+ * may span lines and hold JSX expressions, e.g. suggestions={["a", "b"]}.
+ */
+export function countOpeningTags(content: string, name: string): number {
+  const tagRegex = new RegExp(`<${name}(?![a-zA-Z])((?:"[^"]*"|'[^']*'|\\{[^}]*\\}|[^>"'{])*)>`, 'g')
+  let count = 0
+  for (const match of content.matchAll(tagRegex)) {
+    if (!match[1].trimEnd().endsWith('/')) count++
+  }
+  return count
+}
 
 /**
  * Validate Syntext MDX content
@@ -126,6 +141,16 @@ function validateFrontmatter(content: string): { errors: ValidationError[], warn
     }
   }
 
+  // The generated home (home frontmatter) is deprecated; home: false is the opt-in.
+  const homeIndex = frontmatterLines.findIndex(line => /^home:/.test(line))
+  if (homeIndex !== -1 && !/^home:\s*false\s*$/.test(frontmatterLines[homeIndex])) {
+    warnings.push({
+      line: startLine + homeIndex,
+      message: 'The home frontmatter key is deprecated: the generated home stops on 27 November 2026.',
+      suggestion: 'Write the home in the page body with the home components (<Hero title>, <SectionCards />, <LatestUpdates />…), drop home, and set layout: wide',
+    })
+  }
+
   // Warn about missing description
   const hasDescription = frontmatterLines.some(line => line.trim().startsWith('description:'))
   if (!hasDescription) {
@@ -167,11 +192,11 @@ function validateComponents(content: string, lines: string[]): { errors: Validat
   for (const comp of COMPONENTS) {
     if (SELF_CLOSING_COMPONENTS.has(comp.name)) continue
 
-    // Use word boundary to avoid matching CardGroup when looking for Card
-    const openRegex = new RegExp(`<${comp.name}(?![a-zA-Z])[^>]*>`, 'g')
+    // Word boundary avoids matching CardGroup when looking for Card; a
+    // self-closing tag (`<SectionCards />`) needs no closing tag.
     const closeRegex = new RegExp(`</${comp.name}>`, 'g')
-    
-    const openCount = (content.match(openRegex) || []).length
+
+    const openCount = countOpeningTags(content, comp.name)
     const closeCount = (content.match(closeRegex) || []).length
 
     if (openCount > closeCount) {
