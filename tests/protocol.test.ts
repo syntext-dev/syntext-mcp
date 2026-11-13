@@ -47,6 +47,21 @@ describe('MCP protocol (in-memory transport)', () => {
     ])
   })
 
+  it('annotates every tool as read-only with a title and explicit hints', async () => {
+    const { tools } = await client.listTools()
+    for (const tool of tools) {
+      expect(tool.annotations?.title).toEqual(expect.any(String))
+      expect(tool.annotations?.title?.length).toBeGreaterThan(0)
+      expect(tool.annotations?.readOnlyHint).toBe(true)
+      expect(tool.annotations?.destructiveHint).toBe(false)
+      expect(tool.annotations?.openWorldHint).toBe(false)
+      expect(tool.name.length).toBeLessThanOrEqual(64)
+    }
+    const createPage = tools.find(t => t.name === 'create_page')
+    expect(createPage?.annotations?.title).toBe('Generate page template')
+    expect(createPage?.description).toContain('does not create or save a file')
+  })
+
   it('get_components returns a specific component', async () => {
     const result = await client.callTool({ name: 'get_components', arguments: { name: 'Card' } })
     const text = firstText(result)

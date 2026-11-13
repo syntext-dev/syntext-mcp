@@ -126,6 +126,8 @@ The AI knows the exact props, syntax, and nesting rules because it queried the M
 
 ## Tools
 
+Every tool is read-only: it returns reference material or checks the text you pass it, and never reads or writes your files, account or network. Each tool declares MCP annotations (`title`, `readOnlyHint: true`, `destructiveHint: false`, `openWorldHint: false`), so clients that honour them can run the tools without asking each time.
+
 ### `get_components`
 Get available MDX components with syntax, props, and examples.
 
@@ -191,7 +193,7 @@ Validate MDX content for errors and warnings.
 ```
 
 ### `create_page`
-Generate a page template for a specific page type.
+Generate a page template for a specific page type. Returns the template as text; nothing is saved.
 
 **Parameters:**
 - `pageType`: Type of page (guide, api-reference, quickstart, landing)
