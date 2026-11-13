@@ -3,11 +3,11 @@
 [![npm version](https://img.shields.io/npm/v/@syntext/mcp.svg)](https://www.npmjs.com/package/@syntext/mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Model Context Protocol (MCP) server that enables AI assistants (GitHub Copilot, Cursor, Claude Desktop) to generate valid [Syntext](https://syntext.dev) documentation.
+MCP server for [Syntext](https://syntext.dev) docs: lets AI assistants write, check and publish valid Syntext pages. Use it from Claude, Cursor, Copilot or any MCP client.
 
 ## What is this?
 
-When you're using an AI coding assistant to write documentation for your Syntext-powered docs site, the AI needs to know:
+Syntext publishes your docs as a fast, beautiful site your readers can ask: help centres, product guides, handbooks and API docs. When an AI assistant writes pages for a Syntext site, it needs to know:
 - Which MDX components are available (`<Card>`, `<CodeGroup>`, `<Note>`, etc.)
 - What props each component accepts
 - How to structure frontmatter for different page types
@@ -205,14 +205,14 @@ Generate a page template for a specific page type. Returns the template as text;
 ```mdx
 ---
 title: Acme
-description: Guides, API reference and answers, in one place.
+description: Guides and answers, in one place.
 layout: wide
 ---
 
-<Hero title="Acme" description="Guides, API reference and answers, in one place.">
+<Hero title="Acme" description="Guides and answers, in one place.">
   <SearchBar mode="both" />
 
-  [Get started](/quickstart) [API reference](/api-reference)
+  [Get started](/quickstart) [Ask](/ask)
 </Hero>
 
 <SectionCards />

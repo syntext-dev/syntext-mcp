@@ -2,7 +2,7 @@
 /**
  * Syntext MCP Server — stdio entry point.
  *
- * Model Context Protocol server that helps AI assistants generate valid Syntext documentation.
+ * MCP server for Syntext docs: lets AI assistants write, check and publish valid Syntext pages.
  * Provides tools for:
  * - Getting MDX component syntax and examples
  * - Getting frontmatter schema for different page types
