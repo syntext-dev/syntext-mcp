@@ -12,7 +12,7 @@ layout: wide
 <Hero title="Acme" description="Docs for Acme.">
   <SearchBar mode="both" />
 
-  [Get started](/quickstart) [API reference](/api-reference)
+  [Get started](/quickstart)
 </Hero>
 
 <SectionCards />
@@ -22,7 +22,7 @@ layout: wide
   })
 
   it('should use the default description when none is given', () => {
-    expect(starterIndexMdx({ title: 'Acme', description: '   ' })).toContain('description: Guides, API reference and answers, in one place.')
+    expect(starterIndexMdx({ title: 'Acme', description: '   ' })).toContain('description: Guides and answers, in one place.')
   })
 
   it('should quote YAML and escape attributes when the title needs it', () => {
