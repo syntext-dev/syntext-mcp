@@ -1,4 +1,6 @@
 export * from './components'
+export * from './components-home'
 export * from './frontmatter'
 export * from './config'
 export * from './validator'
+export * from './starter-index'

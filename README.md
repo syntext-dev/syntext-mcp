@@ -133,7 +133,7 @@ Get available MDX components with syntax, props, and examples.
 
 **Parameters:**
 - `name` (optional): Specific component name to get details for
-- `category` (optional): Filter by category (layout, code, callouts, interactive, api, media, steps)
+- `category` (optional): Filter by category (layout, home, navigation, code, callouts, interactive, api, media, steps). `home` lists the components the docs home is built from.
 
 **Example response:**
 ```json
@@ -200,6 +200,28 @@ Generate a page template for a specific page type. Returns the template as text;
 - `title`: Page title
 - `description` (optional): Page description
 
+`landing` is the docs home, `index.mdx`. On doc engine v2 the home is the page's own content, built from the home components with `layout: wide`; the template is the same starter a new Syntext project gets:
+
+```mdx
+---
+title: Acme
+description: Guides, API reference and answers, in one place.
+layout: wide
+---
+
+<Hero title="Acme" description="Guides, API reference and answers, in one place.">
+  <SearchBar mode="both" />
+
+  [Get started](/quickstart) [API reference](/api-reference)
+</Hero>
+
+<SectionCards />
+
+<LatestUpdates count={3} />
+```
+
+The `home` frontmatter key (the generated home) is deprecated and stops on 27 November 2026; `validate_mdx` warns about it. `home: false` opts an index in to rendering its own content.
+
 ## Resources
 
 ### `syntext://components`
@@ -215,6 +237,8 @@ The MCP server provides schemas for these Syntext MDX components:
 | Category | Components |
 |----------|------------|
 | Layout | `Card`, `CardGroup`, `Hero` |
+| Home (doc engine v2) | `Hero` (with `title`), `SearchBar`, `SectionCards`, `QuickStart`, `ApiGroups`, `SdkList`, `CommandList`, `PopularPages`, `LatestUpdates`, `SupportCard` |
+| Navigation | `SearchBar` |
 | Code | `CodeGroup` |
 | Callouts | `Note`, `Tip`, `Warning`, `Danger` |
 | Interactive | `Tabs`, `Expandable` |
@@ -239,6 +263,8 @@ src/
 ├── server.ts             # MCP server factory (tools + resources)
 └── schemas/
     ├── components.ts     # Component definitions
+    ├── components-home.ts # Home components (doc engine v2)
+    ├── starter-index.ts  # Starter index.mdx (create_page landing)
     ├── frontmatter.ts    # Page type schemas
     ├── config.ts         # syntext.json schema
     └── validator.ts      # MDX validation
@@ -257,7 +283,7 @@ src/
 
 **Validation errors:**
 - Use the `validate_mdx` tool to check your content before saving
-- Common issues: missing frontmatter title, unclosed components
+- Common issues: missing frontmatter title, unclosed components. Components with no children can be self-closing (`<SectionCards />`).
 
 ## License
 
