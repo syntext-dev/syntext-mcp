@@ -1,5 +1,5 @@
 /**
- * Syntext configuration schema (syntext.config.json).
+ * Syntext configuration schema (syntext.json).
  * Defines all configuration options for a Syntext documentation project.
  */
 
