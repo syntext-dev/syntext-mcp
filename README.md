@@ -156,6 +156,8 @@ Get frontmatter schema for different page types.
 **Parameters:**
 - `pageType` (optional): Type of page (guide, api-reference, changelog, landing, sdk). Omit to get all page types plus the icon list.
 
+`landing` (the docs home, `index.mdx`) also shows the whole starter `index.mdx` under its example: the same page `create_page` returns for `landing`.
+
 **Example response for `api-reference`:**
 ```yaml
 ---

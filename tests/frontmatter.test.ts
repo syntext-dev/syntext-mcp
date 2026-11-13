@@ -26,6 +26,13 @@ describe('Frontmatter Schema', () => {
       }
     })
 
+    it('gives only the landing page type the starter index.mdx', () => {
+      const landing = getPageType('landing')!
+      expect(landing.starter).toContain('layout: wide')
+      expect(landing.starter).toContain('<SectionCards />')
+      expect(getAllPageTypes().filter(pt => pt.starter).map(pt => pt.type)).toEqual(['landing'])
+    })
+
     it('includes essential page types', () => {
       const pageTypes = getAllPageTypes()
       const types = pageTypes.map(pt => pt.type)
