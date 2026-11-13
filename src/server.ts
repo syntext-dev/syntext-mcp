@@ -48,6 +48,24 @@ function formatComponent(comp: ReturnType<typeof getComponent>): string {
   return output
 }
 
+/**
+ * MCP tool annotations. Every tool here is static reference material or a
+ * pure computation over the arguments: nothing is read from or written to an
+ * account, a file or the network. Directory clients (Claude, ChatGPT) read
+ * these to decide which calls can run without confirmation.
+ */
+export const TOOL_ANNOTATIONS = {
+  get_components: readOnly('Get MDX components'),
+  get_frontmatter: readOnly('Get frontmatter schema'),
+  get_config: readOnly('Get syntext.json schema'),
+  validate_mdx: readOnly('Validate MDX'),
+  create_page: readOnly('Generate page template'),
+} as const
+
+function readOnly(title: string) {
+  return { title, readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const
+}
+
 export function createServer(): McpServer {
   const server = new McpServer({
     name: 'syntext',
@@ -65,6 +83,7 @@ export function createServer(): McpServer {
       name: z.string().optional().describe('Specific component name (e.g., "Card", "CodeGroup"). Omit to get all components.'),
       category: z.enum(['layout', 'code', 'callouts', 'interactive', 'api', 'media', 'steps']).optional().describe('Filter by category'),
     },
+    TOOL_ANNOTATIONS.get_components,
     async ({ name, category }) => {
       if (name) {
         const component = getComponent(name)
@@ -107,6 +126,7 @@ export function createServer(): McpServer {
     {
       pageType: z.enum(['guide', 'api-reference', 'changelog', 'landing', 'sdk']).optional().describe('Page type to get specific fields for'),
     },
+    TOOL_ANNOTATIONS.get_frontmatter,
     async ({ pageType }) => {
       if (pageType) {
         const schema = getPageType(pageType)
@@ -158,6 +178,7 @@ export function createServer(): McpServer {
     {
       example: z.enum(['full', 'minimal']).optional().describe('Get an example config instead of schema'),
     },
+    TOOL_ANNOTATIONS.get_config,
     async ({ example }) => {
       if (example === 'full') {
         return {
@@ -216,6 +237,7 @@ export function createServer(): McpServer {
     {
       content: z.string().describe('The MDX content to validate'),
     },
+    TOOL_ANNOTATIONS.validate_mdx,
     async ({ content }) => {
       const result = validateMdx(content)
 
@@ -262,12 +284,13 @@ export function createServer(): McpServer {
 
   server.tool(
     'create_page',
-    'Generate a complete Syntext MDX page template with proper frontmatter and structure.',
+    'Generate a complete Syntext MDX page template with proper frontmatter and structure. Returns the template as text; does not create or save a file.',
     {
       pageType: z.enum(['guide', 'api-reference', 'quickstart', 'landing']).describe('Type of page to create'),
       title: z.string().describe('Page title'),
       description: z.string().optional().describe('Page description'),
     },
+    TOOL_ANNOTATIONS.create_page,
     async ({ pageType, title, description }) => {
       let content = ''
 
