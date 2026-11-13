@@ -12,7 +12,7 @@ layout: wide
 <Hero title="Acme" description="Docs for Acme.">
   <SearchBar mode="both" />
 
-  [Get started](/quickstart) [Ask](/ask)
+  [Get started](/quickstart)
 </Hero>
 
 <SectionCards />

@@ -212,7 +212,7 @@ layout: wide
 <Hero title="Acme" description="Guides and answers, in one place.">
   <SearchBar mode="both" />
 
-  [Get started](/quickstart) [Ask](/ask)
+  [Get started](/quickstart)
 </Hero>
 
 <SectionCards />
