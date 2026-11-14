@@ -151,6 +151,7 @@ export function createServer(): McpServer {
         }
 
         output += `\n### Example\n\n\`\`\`yaml\n${schema.example}\n\`\`\`\n`
+        if (schema.starter) output += `\n### Starter index.mdx\n\n\`\`\`mdx\n${schema.starter}\`\`\`\n`
 
         return {
           content: [{ type: 'text', text: output }],

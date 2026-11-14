@@ -126,6 +126,16 @@ describe('MCP protocol (in-memory transport)', () => {
     expect(client.getServerVersion()?.version).toBe(pkg.version)
   })
 
+  it('get_frontmatter landing shows the starter index.mdx under the example, as the hosted connector does', async () => {
+    const result = await client.callTool({ name: 'get_frontmatter', arguments: { pageType: 'landing' } })
+    const text = firstText(result)
+    expect(text).toContain('### Starter index.mdx\n\n```mdx\n---\ntitle: Acme API Documentation')
+    expect(text).toContain('<SectionCards />')
+    expect(text).toContain('**Deprecated:** use the home components in the index page body.')
+    const guide = firstText(await client.callTool({ name: 'get_frontmatter', arguments: { pageType: 'guide' } }))
+    expect(guide).not.toContain('Starter index.mdx')
+  })
+
   it('create_page landing returns the home starter built from components', async () => {
     const result = await client.callTool({
       name: 'create_page',

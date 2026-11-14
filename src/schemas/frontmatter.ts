@@ -3,6 +3,8 @@
  * Defines valid frontmatter fields for different page types.
  */
 
+import { starterIndexMdx } from './starter-index'
+
 export interface FrontmatterField {
   name: string
   type: string
@@ -19,6 +21,8 @@ export interface PageTypeSchema {
   description: string
   fields: FrontmatterField[]
   example: string
+  /** The whole starter index.mdx (create_page landing), shown under the example. */
+  starter?: string
 }
 
 export const PAGE_TYPES: PageTypeSchema[] = [
@@ -86,6 +90,7 @@ title: Acme API Documentation
 description: Build powerful integrations with our developer-friendly API.
 layout: wide
 ---`,
+    starter: starterIndexMdx({ title: 'Acme API Documentation', description: 'Build powerful integrations with our developer-friendly API.' }),
   },
   {
     type: 'sdk',
