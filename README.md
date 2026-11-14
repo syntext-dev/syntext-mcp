@@ -222,7 +222,7 @@ layout: wide
 <LatestUpdates count={3} />
 ```
 
-The `home` frontmatter key (the generated home) is deprecated and stops on 27 November 2026; `validate_mdx` warns about it. `home: false` opts an index in to rendering its own content.
+The `home` frontmatter key (the generated home) is deprecated and stops on 1 December 2026; `validate_mdx` warns about it. `home: false` opts an index in to rendering its own content.
 
 ## Resources
 

@@ -146,7 +146,7 @@ function validateFrontmatter(content: string): { errors: ValidationError[], warn
   if (homeIndex !== -1 && !/^home:\s*false\s*$/.test(frontmatterLines[homeIndex])) {
     warnings.push({
       line: startLine + homeIndex,
-      message: 'The home frontmatter key is deprecated: the generated home stops on 27 November 2026.',
+      message: 'The home frontmatter key is deprecated: the generated home stops on 1 December 2026.',
       suggestion: 'Write the home in the page body with the home components (<Hero title>, <SectionCards />, <LatestUpdates />…), drop home, and set layout: wide',
     })
   }

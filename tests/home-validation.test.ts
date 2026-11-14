@@ -56,7 +56,7 @@ describe('Validator: home frontmatter', () => {
     const result = validateMdx(page('# Home', 'title: Home\ndescription: x\nhome:\n  hero:\n    title: Acme'))
     expect(result.valid).toBe(true)
     const warning = result.warnings.find(w => w.message.includes('home frontmatter key is deprecated'))
-    expect(warning?.message).toContain('27 November 2026')
+    expect(warning?.message).toContain('1 December 2026')
     expect(warning?.line).toBe(4)
   })
 
@@ -78,6 +78,13 @@ describe('Frontmatter: landing page', () => {
     expect(home?.deprecated).toBeDefined()
     expect(home?.type).toBe('object | false')
     expect(home?.description).toContain('home: false')
+  })
+
+  it('should give the generated home cut-off as 1 December 2026', () => {
+    const home = getFieldsForPageType('landing').find(f => f.name === 'home')
+    expect(home?.description).toContain('stops on 1 December 2026')
+    expect(getPageType('landing')?.description).toContain('stops on 1 December 2026')
+    expect(JSON.stringify(getPageType('landing'))).not.toContain('27 November')
   })
 
   it('should use layout: wide in the landing example', () => {
