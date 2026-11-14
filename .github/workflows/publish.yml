@@ -14,12 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Node 24 ships npm 11.5+, which publishes through npm Trusted Publishing
+      # (OIDC: npm trusts this workflow, no token to expire). NPM_TOKEN stays
+      # as a fallback for a registry without a trusted publisher configured.
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           registry-url: https://registry.npmjs.org
 
+      - run: npm --version
       - run: npm ci
       - run: npm run lint
       - run: npm test
