@@ -1,6 +1,6 @@
 {
   "name": "@syntext/mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MCP server for Syntext docs: lets AI assistants write, check and publish valid Syntext pages.",
   "author": "Syntext <hello@syntext.dev>",
   "license": "MIT",
